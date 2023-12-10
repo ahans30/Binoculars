@@ -52,7 +52,6 @@ def entropy(p_logits: torch.Tensor,
         ce_nan = ce.masked_fill(~padding_mask.bool(), float("nan"))
         mean_ce = np.nanmedian(ce_nan.cpu().float().numpy(), 1)
     else:
-        # breakpoint()
         mean_ce = (((ce * padding_mask).sum(1) / padding_mask.sum(1)).to("cpu").float().numpy())
 
     return mean_ce
