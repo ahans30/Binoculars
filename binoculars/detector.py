@@ -59,23 +59,28 @@ class Binoculars(object):
             return_token_type_ids=False).to(self.observer_model.device)
         return encodings
 
+    @torch.inference_mode()
     def _get_observer_logits(self, encodings: transformers.BatchEncoding) -> torch.Tensor:
         return self.observer_model(**encodings).logits
 
+    @torch.inference_mode()
     def _get_performer_logits(self, encodings: transformers.BatchEncoding) -> torch.Tensor:
         return self.performer_model(**encodings).logits
 
+    @torch.inference_mode()
     def _get_ppl(self, encodings: transformers.BatchEncoding) -> torch.Tensor:
         performer_logits = self._get_performer_logits(encodings)
         ppl = perplexity(encodings, performer_logits)
         return ppl
 
+    @torch.inference_mode()
     def _get_x_ppl(self, encodings: transformers.BatchEncoding) -> torch.Tensor:
         observer_logits = self._get_observer_logits(encodings)
         performer_logits = self._get_performer_logits(encodings)
         x_ppl = entropy(observer_logits, performer_logits, encodings, self.tokenizer.pad_token_id)
         return x_ppl
 
+    @torch.inference_mode()
     def compute_score(self, input_text: Union[list[str], str]) -> Union[float, list[float]]:
         batch = [input_text] if isinstance(input_text, str) else input_text
         encodings = self._tokenize(batch)
@@ -85,7 +90,8 @@ class Binoculars(object):
         binoculars_scores = binoculars_scores.tolist()
         return binoculars_scores[0] if isinstance(input_text, str) else binoculars_scores
 
+    @torch.inference_mode()
     def predict(self, input_text: Union[list[str], str]) -> Union[list[str], str]:
         binoculars_scores = self.compute_score(input_text)
-        pred = np.where(binoculars_scores < GLOBAL_BINOCULARS_THRESHOLD, "AI", "Human").tolist()
+        pred = np.where(binoculars_scores < GLOBAL_BINOCULARS_THRESHOLD, "AI-Generated", "Human-Generated").tolist()
         return pred
