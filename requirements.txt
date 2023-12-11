@@ -1,3 +1,4 @@
 transformers
 numpy
 torch
+gradio
