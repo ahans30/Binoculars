@@ -1,4 +1,5 @@
-transformers
+sentencepiece
+transformers[torch] @ https://github.com/huggingface/transformers/archive/refs/tags/v4.31.0.zip
 numpy
-torch
 gradio
+gradio_client
