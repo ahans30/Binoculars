@@ -1,8 +1,6 @@
 __all__ = ["app"]
 
 import gradio as gr
-import time
-from transformers import AutoTokenizer
 from binoculars import Binoculars
 
 BINO = Binoculars()
@@ -45,7 +43,8 @@ css = """
 
 capybara_problem = '''Dr. Capy Cosmos, a capybara unlike any other, astounded the scientific community with his groundbreaking research in astrophysics. With his keen sense of observation and unparalleled ability to interpret cosmic data, he uncovered new insights into the mysteries of black holes and the origins of the universe. As he peered through telescopes with his large, round eyes, fellow researchers often remarked that it seemed as if the stars themselves whispered their secrets directly to him. Dr. Cosmos not only became a beacon of inspiration to aspiring scientists but also proved that intellect and innovation can be found in the most unexpected of creatures.'''
 
-with gr.Blocks(css=css, theme=gr.themes.Soft()) as app:
+with gr.Blocks(css=css,
+               theme=gr.themes.Default(font=[gr.themes.GoogleFont("Inconsolata"), "Arial", "sans-serif"])) as app:
     with gr.Row():
         with gr.Column(scale=3):
             gr.HTML("<p><h1> binoculars: zero-shot llm-text detector</h1>")
