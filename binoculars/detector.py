@@ -11,7 +11,7 @@ from .metrics import perplexity, entropy
 
 torch.set_grad_enabled(False)
 
-GLOBAL_BINOCULARS_THRESHOLD = 0.9015310749276843  # selected using Falcon-7B and Falcon-7B-Instruct
+GLOBAL_BINOCULARS_THRESHOLD = 0.9015310749276843  # selected using Falcon-7B and Falcon-7B-Instruct at bfloat16
 DEVICE_1 = "cuda:0" if torch.cuda.is_available() else "cpu"
 DEVICE_2 = "cuda:1" if torch.cuda.device_count() > 1 else DEVICE_1
 
