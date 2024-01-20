@@ -1,4 +1,4 @@
-# <img src="./assets/bino-logo.svg" width=40 style="padding-top: 0px"/>  Binoculars: Zero-Shot Detection of LLM-Generated Text [[paper]](paper-link)
+# <img src="./assets/bino-logo.svg" width=40 style="padding-top: 0px"/>  Binoculars: Zero-Shot Detection of Machine-Generated Text [[paper]](paper-link)
 
 <p align="center">
   <img src="assets/binoculars.jpg" width="300" height="300" alt="Cute Llama">
@@ -6,9 +6,9 @@
 
 We introduce Binoculars, a state-of-the-art method for detecting AI-generated text. Binoculars is a
 zero-shot and domain-agnostic (requires no training data) method. It is based on a simple idea: most
-decoder-only, causal language models are trained on highly similar data like Common Crawl, The Pile, etc. More details
-about the results can be found in our paper titled **Spotting LLMs with Binoculars: Zero-Shot Detection of
-Machine-Generated Text**.
+decoder-only, causal language models have a huge overlap in pretraining datasets, for e.g. Common Crawl, Pile, etc.
+More details about the method and results can be found in our paper **Spotting LLMs with Binoculars: Zero-Shot
+Detection of Machine-Generated Text**.
 
 ## Getting Started
 
