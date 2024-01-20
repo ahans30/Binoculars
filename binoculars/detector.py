@@ -5,8 +5,8 @@ import torch
 import transformers
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from binoculars.utils import assert_tokenizer_consistency
 from config import huggingface_config
+from .utils import assert_tokenizer_consistency
 from .metrics import perplexity, entropy
 
 torch.set_grad_enabled(False)
