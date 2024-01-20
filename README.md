@@ -3,8 +3,8 @@
 We introduce Binoculars, a state-of-the-art method for detecting AI-generated text. Binoculars is a
 zero-shot and domain-agnostic (requires no training data) method. It is based on a simple idea: most
 decoder-only, causal language models are trained on highly similar data like Common Crawl, The Pile, etc. More details
-about the results can be found in our paper titled [Spotting LLMs with Binoculars: Zero-Shot Detection of
-Machine-Generated Text](insert-link-here).
+about the results can be found in our paper titled **Spotting LLMs with Binoculars: Zero-Shot Detection of
+Machine-Generated Text**.
 
 ## Getting Started
 
@@ -23,7 +23,7 @@ $ pip install -e .
 ### Usage
 
 Please note, this implementation comes with a fixed global threshold that is used to classify the input as AI-generated
-or not. This threshold is selected on when using _Falcon-7B_ and _Falcon-7B-Instruct_ models for scoring. If you want to
+or not. This threshold is selected using _Falcon-7B_ and _Falcon-7B-Instruct_ models for scoring. If you want to
 use different scoring models, you can pass it as an argument to the `Binoculars` class. Please read the paper for more
 details about the Binoculars work.
 
@@ -46,7 +46,7 @@ print(bino.compute_score(sample_string))  # 0.75661373
 print(bino.predict(sample_string))  # 'AI-Generated'
 ```
 
-In the above code, user can also pass a `list` of `str` to `compute_score` and `predict` methods and get results for
+In the above code, user can also pass a `list` of `str` to `compute_score` and `predict` methods to get results for
 the entire batch of samples.
 
 ### Demo
@@ -60,8 +60,8 @@ $ python demo.py
 
 ## Limitations
 
-AI-generated text detectors aim for accuracy, but no detectors are perfect and can have multiple failure modes (for eg.
-Binoculars is more performant in detecting English language text compared to other languages). This implementation is
+All AI-generated text detectors aim for accuracy, but none are perfect and can have multiple failure modes (e.g.,
+Binoculars is more proficient in detecting English language text compared to other languages). This implementation is
 for academic purposes only and should not be considered as a consumer product. We also strongly caution against using
 Binoculars (or any detector) without human supervision.
 
