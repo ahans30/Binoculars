@@ -55,7 +55,7 @@ We have also made a demo available to predict AI-generated text interactively wi
 using [gradio](https://github.com/gradio-app/gradio). You can run the demo using the following command:
 
 ```bash
-$ python demo.py
+$ python app.py
 ```
 
 ## Limitations
