@@ -1,7 +1,7 @@
 # <img src="./assets/bino-logo.svg" width=40 style="padding-top: 0px"/>  Binoculars: Zero-Shot Detection of LLM-Generated Text [[paper]](paper-link)
 
 <p align="center">
-  <img src="assets/binoculars.jpg" width="300" height="300" alt="Cool Binoculars with Falcon on Top">
+  <img src="assets/binoculars.jpg" width="300" height="300" alt="ool Binoculars with Falcon on Top">
 </p>
 
 We introduce Binoculars, a state-of-the-art method for detecting AI-generated text. Binoculars is a
