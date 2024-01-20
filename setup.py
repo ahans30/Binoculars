@@ -5,7 +5,7 @@ setup(
     version='0.0.10',
     packages=find_packages(),
     url='https://github.com/ahans30/Binoculars',
-    license='',
+    license=open("LICENSE.md", "r", encoding="utf-8").read(),
     author='Authors of "Binoculars: Zero-Shot Detection of LLM-Generated Text"',
     author_email='ahans1@umd.edu',
     description='A language model generated text detector.',
