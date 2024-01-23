@@ -1,4 +1,4 @@
-# <img src="./assets/bino-logo.svg" width=40 style="padding-top: 0px"/>  Binoculars: Zero-Shot Detection of LLM-Generated Text [[paper]](paper-link)
+# <img src="./assets/bino-logo.svg" width=40 style="padding-top: 0px"/>  Binoculars: Zero-Shot Detection of LLM-Generated Text [[paper]](https://arxiv.org/abs/2401.12070)
 
 <p align="center">
   <img src="assets/binoculars.jpg" width="300" height="300" alt="ool Binoculars with Falcon on Top">
@@ -74,14 +74,12 @@ Binoculars (or any detector) without human supervision.
 If you find this work useful, please cite our paper:
 
 ```bibtex
-@article{binoculars,
-    author = {Author Name},
-    title = {Title of the Paper},
-    journal = {Journal Name},
-    year = {2023},
-    volume = {1},
-    number = {1},
-    pages = {1-10},
-    doi = {your_doi_number}
+@misc{hans2024spotting,
+      title={Spotting LLMs With Binoculars: Zero-Shot Detection of Machine-Generated Text}, 
+      author={Abhimanyu Hans and Avi Schwarzschild and Valeriia Cherepanova and Hamid Kazemi and Aniruddha Saha and Micah Goldblum and Jonas Geiping and Tom Goldstein},
+      year={2024},
+      eprint={2401.12070},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
 }
 ```
