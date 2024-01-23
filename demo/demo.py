@@ -51,7 +51,7 @@ with gr.Blocks(css=css,
         with gr.Column(scale=1):
             gr.HTML("""
             <p>
-            <a href="https://github.com/AHans30/Binoculars" target="_blank">paper</a>
+            <a href="https://arxiv.org/abs/2401.12070" target="_blank">paper</a>
                 
             <a href="https://github.com/AHans30/Binoculars" target="_blank">code</a>
                 
@@ -93,16 +93,14 @@ with gr.Blocks(css=css,
         gr.Markdown(
             """
             ```bibtex
-            @article{your_citation_key,
-                author = {Author Name},
-                title = {Title of the Paper},
-                journal = {Journal Name},
-                year = {2023},
-                volume = {1},
-                number = {1},
-                pages = {1-10},
-                doi = {your_doi_number}
-            }
+                @misc{hans2024spotting,
+                      title={Spotting LLMs With Binoculars: Zero-Shot Detection of Machine-Generated Text}, 
+                      author={Abhimanyu Hans and Avi Schwarzschild and Valeriia Cherepanova and Hamid Kazemi and Aniruddha Saha and Micah Goldblum and Jonas Geiping and Tom Goldstein},
+                      year={2024},
+                      eprint={2401.12070},
+                      archivePrefix={arXiv},
+                      primaryClass={cs.CL}
+                }
             """
         )
 
