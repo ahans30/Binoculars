@@ -64,7 +64,8 @@ class Binoculars(object):
     def _get_logits(self, encodings: transformers.BatchEncoding) -> torch.Tensor:
         observer_logits = self.observer_model(**encodings.to(DEVICE_1)).logits
         performer_logits = self.performer_model(**encodings.to(DEVICE_2)).logits
-        torch.cuda.synchronize()
+        if DEVICE_1 != "cpu":
+            torch.cuda.synchronize()
         return observer_logits, performer_logits
 
     def compute_score(self, input_text: Union[list[str], str]) -> Union[float, list[float]]:
