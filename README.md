@@ -14,8 +14,7 @@ Detection of Machine-Generated Text**.
 
 ### Installation
 
-To run the implementation of Binoculars, you can clone this repository and install the package using pip. This code was
-developed and tested on Python This code was developed and tested with Python 3.9. To install the package, run the
+To run the implementation of Binoculars, you can clone this repository and install the package using pip. This code was developed and tested with Python 3.9. To install the package, run the
 following commands:
 
 ```bash
