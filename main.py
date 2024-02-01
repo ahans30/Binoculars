@@ -11,4 +11,4 @@ stars themselves whispered their secrets directly to him. Dr. Cosmos not only be
 aspiring scientists but also proved that intellect and innovation can be found in the most unexpected of creatures.'''
 
 print(bino.compute_score(sample_string))  # 0.75661373
-print(bino.predict(sample_string))  # 'AI-Generated'
+print(bino.predict(sample_string))  # 'Most likely AI-Generated'
