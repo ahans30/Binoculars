@@ -11,7 +11,10 @@ from .metrics import perplexity, entropy
 
 torch.set_grad_enabled(False)
 
-GLOBAL_BINOCULARS_THRESHOLD = 0.9015310749276843  # selected using Falcon-7B and Falcon-7B-Instruct at bfloat16
+# selected using Falcon-7B and Falcon-7B-Instruct at bfloat16
+BINOCULARS_ACCURACY_THRESHOLD = 0.9015310749276843  # optimized for f1-score
+BINOCULARS_FPR_THRESHOLD = 0.8536432310785527  # optimized for low-fpr
+
 DEVICE_1 = "cuda:0" if torch.cuda.is_available() else "cpu"
 DEVICE_2 = "cuda:1" if torch.cuda.device_count() > 1 else DEVICE_1
 
@@ -22,8 +25,16 @@ class Binoculars(object):
                  performer_name_or_path: str = "tiiuae/falcon-7b-instruct",
                  use_bfloat16: bool = True,
                  max_token_observed: int = 512,
+                 mode: str = "low-fpr",
                  ) -> None:
         assert_tokenizer_consistency(observer_name_or_path, performer_name_or_path)
+
+        if mode == "low-fpr":
+            self.threshold = BINOCULARS_FPR_THRESHOLD
+        elif mode == "accuracy":
+            self.threshold = BINOCULARS_ACCURACY_THRESHOLD
+        else:
+            raise ValueError(f"Invalid mode: {mode}")
 
         self.observer_model = AutoModelForCausalLM.from_pretrained(observer_name_or_path,
                                                                    device_map={"": DEVICE_1},
@@ -48,6 +59,14 @@ class Binoculars(object):
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
         self.max_token_observed = max_token_observed
+
+    def change_mode(self, mode: str) -> None:
+        if mode == "low-fpr":
+            self.threshold = BINOCULARS_FPR_THRESHOLD
+        elif mode == "accuracy":
+            self.threshold = BINOCULARS_ACCURACY_THRESHOLD
+        else:
+            raise ValueError(f"Invalid mode: {mode}")
 
     def _tokenize(self, batch: list[str]) -> transformers.BatchEncoding:
         batch_size = len(batch)
@@ -81,5 +100,8 @@ class Binoculars(object):
 
     def predict(self, input_text: Union[list[str], str]) -> Union[list[str], str]:
         binoculars_scores = np.array(self.compute_score(input_text))
-        pred = np.where(binoculars_scores < GLOBAL_BINOCULARS_THRESHOLD, "AI-Generated", "Human-Generated").tolist()
+        pred = np.where(binoculars_scores < self.threshold,
+                        "Most likely AI-generated",
+                        "Most likely human-generated"
+                        ).tolist()
         return pred
