@@ -14,7 +14,8 @@ Detection of Machine-Generated Text**.
 
 ### Installation
 
-To run the implementation of Binoculars, you can clone this repository and install the package using pip. This code was developed and tested with Python 3.9. To install the package, run the
+To run the implementation of Binoculars, you can clone this repository and install the package using pip. This code was
+developed and tested on Python This code was developed and tested with Python 3.9. To install the package, run the
 following commands:
 
 ```bash
@@ -46,7 +47,7 @@ stars themselves whispered their secrets directly to him. Dr. Cosmos not only be
 aspiring scientists but also proved that intellect and innovation can be found in the most unexpected of creatures.'''
 
 print(bino.compute_score(sample_string))  # 0.75661373
-print(bino.predict(sample_string))  # 'AI-Generated'
+print(bino.predict(sample_string))  # 'Most likely AI-Generated'
 ```
 
 In the above code, user can also pass a `list` of `str` to `compute_score` and `predict` methods to get results for
