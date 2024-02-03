@@ -29,13 +29,7 @@ class Binoculars(object):
                  ) -> None:
         assert_tokenizer_consistency(observer_name_or_path, performer_name_or_path)
 
-        if mode == "low-fpr":
-            self.threshold = BINOCULARS_FPR_THRESHOLD
-        elif mode == "accuracy":
-            self.threshold = BINOCULARS_ACCURACY_THRESHOLD
-        else:
-            raise ValueError(f"Invalid mode: {mode}")
-
+        self.change_mode(mode)
         self.observer_model = AutoModelForCausalLM.from_pretrained(observer_name_or_path,
                                                                    device_map={"": DEVICE_1},
                                                                    trust_remote_code=True,
@@ -50,14 +44,12 @@ class Binoculars(object):
                                                                     else torch.float32,
                                                                     token=huggingface_config["TOKEN"]
                                                                     )
-
         self.observer_model.eval()
         self.performer_model.eval()
 
         self.tokenizer = AutoTokenizer.from_pretrained(observer_name_or_path)
         if not self.tokenizer.pad_token:
             self.tokenizer.pad_token = self.tokenizer.eos_token
-
         self.max_token_observed = max_token_observed
 
     def change_mode(self, mode: str) -> None:
