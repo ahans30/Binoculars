@@ -7,4 +7,4 @@ def assert_tokenizer_consistency(model_id_1, model_id_2):
             == AutoTokenizer.from_pretrained(model_id_2).vocab
     )
     if not identical_tokenizers:
-        raise ValueError(f"Tokenizers are not identical for {model_id_1.name_of_path} and {model_id_2.name_of_path}.")
+        raise ValueError(f"Tokenizers are not identical for {model_id_1} and {model_id_2}.")
