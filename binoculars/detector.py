@@ -1,3 +1,4 @@
+import os
 from typing import Union
 
 import numpy as np
@@ -5,9 +6,14 @@ import torch
 import transformers
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from config import huggingface_config
 from .utils import assert_tokenizer_consistency
 from .metrics import perplexity, entropy
+
+
+huggingface_config = {
+    # Only required for private models from Huggingface (e.g. LLaMA models)
+    "TOKEN": os.environ.get("HF_TOKEN", None)
+}
 
 torch.set_grad_enabled(False)
 
