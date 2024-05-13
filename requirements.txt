@@ -7,3 +7,5 @@ gradio_client
 scikit-learn
 seaborn
 pandas
+sagemaker
+torch
