@@ -1,15 +1,20 @@
 from typing import Union
 
+import os
 import numpy as np
 import torch
 import transformers
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from config import huggingface_config
 from .utils import assert_tokenizer_consistency
 from .metrics import perplexity, entropy
 
 torch.set_grad_enabled(False)
+
+huggingface_config = {
+    # Only required for private models from Huggingface (e.g. LLaMA models)
+    "TOKEN": os.environ.get("HF_TOKEN", None)
+}
 
 # selected using Falcon-7B and Falcon-7B-Instruct at bfloat16
 BINOCULARS_ACCURACY_THRESHOLD = 0.9015310749276843  # optimized for f1-score
