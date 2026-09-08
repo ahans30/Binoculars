@@ -14,15 +14,24 @@ Detection of Machine-Generated Text**.
 
 ### Installation
 
-To run the implementation of Binoculars, you can clone this repository and install the package using pip. This code was
-developed and tested on Python This code was developed and tested with Python 3.9. To install the package, run the
-following commands:
+The upstream implementation was developed with Python 3.9. This fork's Apple GPU
+changes were tested with Python 3.10 in an isolated virtual environment.
+To install the Mac GPU branch (requires Python 3.10):
 
 ```bash
-$ git clone https://github.com/ahans30/Binoculars.git
-$ cd Binoculars
-$ pip install -e .
+git clone --branch macos-mps https://github.com/raux/Binoculars.git
+cd Binoculars
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+python main.py
 ```
+
+Alternatively, use `uv venv --python 3.10 --seed .venv` to create the environment.
+The first inference run downloads both Falcon-7B models (approximately 26 GiB of
+cached weights). Subsequent runs reuse the Hugging Face cache. Dependencies are
+not fully pinned, so a fresh install may resolve versions different from those
+validated below. The original project is [ahans30/Binoculars](https://github.com/ahans30/Binoculars).
 
 ### Usage
 
@@ -52,6 +61,86 @@ print(bino.predict(sample_string))  # 'Most likely AI-Generated'
 
 In the above code, user can also pass a `list` of `str` to `compute_score` and `predict` methods to get results for
 the entire batch of samples.
+
+### Apple Silicon GPU (MPS)
+
+This fork selects CUDA first, then Apple MPS, then CPU. You can override selection:
+
+```python
+bino = Binoculars(device="mps")  # Require Apple GPU; fail if unavailable
+# bino = Binoculars(device="cpu")  # Reference CPU run
+```
+
+Both models share the Apple GPU. The default bfloat16 precision and classification
+thresholds are unchanged; inference disables the unused KV cache. Use a recent
+MPS-capable PyTorch/macOS combination supporting bfloat16. Start with a single
+text and keep the default 512-token limit. GPU memory is shared with macOS; do
+not disable MPS memory safeguards. Unsupported operations raise errors by default
+rather than silently changing precision or falling back to CPU.
+
+Validated on an M4 Pro, 64 GB unified memory, macOS 26.5.2, Python 3.10.21,
+PyTorch 2.14.0 and Transformers 4.31.0. Other versions/hardware need testing.
+CPU and GPU scores may differ, especially near a classification threshold;
+these smoke tests do not establish detector accuracy or recalibrate thresholds.
+
+#### Changes in this fork
+
+- `binoculars/detector.py`: adds per-instance `device="auto" | "cpu" | "cuda" | "mps"`
+  selection and rejects unavailable explicitly requested backends before loading
+  models. CUDA retains its one-/two-GPU routing; both models share one MPS device.
+- Synchronizes the selected backend rather than calling CUDA APIs on Apple GPUs.
+- Passes `use_cache=False` to both model forwards to avoid unused generation caches.
+- `main.py`: computes the score once and reuses it for the classification.
+- `tests/test_devices.py`: offline routing, loading, synchronization, cache, and
+  scalar/batch scoring tests. `tests/falcon_smoke.py`: opt-in real-model checks.
+- `.gitignore`: excludes local generated reports under `artifacts/`.
+
+No model weights, classification thresholds, scoring formulas, or dependency
+requirements were changed. No automatic precision conversion was introduced.
+
+#### Measured validation results
+
+On the machine/software combination above, all 11 unit tests passed. Real Falcon
+runs verified every model parameter and all four forward outputs on the requested
+backend. The GPU run used `PYTORCH_ENABLE_MPS_FALLBACK=0`.
+
+| Workload | CPU scoring | MPS scoring | Speedup | Largest score difference |
+| --- | ---: | ---: | ---: | ---: |
+| Included capybara sample | 18.24 s | 4.51 s | 4.04× | 0 |
+| Padded batch of two short texts | 4.04 s | 1.11 s | 3.64× | 0.003536 |
+
+The capybara score was `0.7566137313842773` on both backends. All three
+classifications agreed at the default low-FPR threshold. Model loading and
+network downloads are excluded from the scoring timings. These are single-run
+measurements, not a repeated benchmark. MPS tensor allocations after scoring
+were approximately 28.12 GB (not a peak-memory measurement).
+
+The CPU/MPS comparison passed an absolute score-difference smoke tolerance of
+0.01; this tolerance is not an accuracy guarantee. Short texts are included to
+exercise padding and batch execution, not to validate detection quality. CUDA
+routing was mocked in unit tests, not tested on NVIDIA hardware. The 512-token
+limit, larger batches, other precision modes, and Gradio UI were not separately
+validated. `python main.py` also passed with automatic MPS selection.
+
+#### Tests
+
+Run offline unit tests (no model downloads):
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Run opt-in real-model tests separately to avoid keeping four models in memory:
+
+```bash
+PYTORCH_ENABLE_MPS_FALLBACK=0 python tests/falcon_smoke.py --device mps --output artifacts/mps-tests/mps.json
+python tests/falcon_smoke.py --device cpu --output artifacts/mps-tests/cpu.json
+```
+
+These tests load both Falcon models, verify parameter and output device placement,
+and score one sample plus a padded two-text batch. The MPS test requires CPU
+fallback to be disabled. Add `HF_HUB_OFFLINE=1` when models are already cached.
+The short batch texts test execution only, not detection quality.
 
 ### Demo
 

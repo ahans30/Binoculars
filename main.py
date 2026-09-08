@@ -10,5 +10,7 @@ peered through telescopes with his large, round eyes, fellow researchers often r
 stars themselves whispered their secrets directly to him. Dr. Cosmos not only became a beacon of inspiration to 
 aspiring scientists but also proved that intellect and innovation can be found in the most unexpected of creatures.'''
 
-print(bino.compute_score(sample_string))  # 0.75661373
-print(bino.predict(sample_string))  # 'Most likely AI-Generated'
+# Reuse the score rather than evaluating both models a second time.
+score = bino.compute_score(sample_string)
+print(score)
+print("Most likely AI-generated" if score < bino.threshold else "Most likely human-generated")
