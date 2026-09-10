@@ -1,5 +1,4 @@
-from demo.demo import app
+from demo.demo import app, css, THEME
 
 if __name__ == "__main__":
-    # Launch the Gradio interface
-    app.launch(show_api=False, debug=True, share=True)
+    app.launch(debug=True, share=True, css=css, theme=THEME)

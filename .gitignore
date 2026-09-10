@@ -165,3 +165,6 @@ samples/
 
 # Local test reports and generated outputs
 artifacts/
+output/
+.DS_Store
+.gradio/

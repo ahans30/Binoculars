@@ -1,11 +1,17 @@
-__all__ = ["app"]
+__all__ = ["app", "css", "THEME"]
 
+import torch
 import gradio as gr
 from binoculars import Binoculars
+from binoculars.detector import DEVICE_1
 
 BINO = Binoculars()
 TOKENIZER = BINO.tokenizer
 MINIMUM_TOKENS = 64
+
+_DEVICE_LABELS = {"mps": "Apple GPU (MPS)", "cpu": "CPU"}
+_device_label = _DEVICE_LABELS.get(DEVICE_1, DEVICE_1.upper())
+_device_emoji = "🍎" if DEVICE_1 == "mps" else ("⚡" if DEVICE_1.startswith("cuda") else "🖥️")
 
 
 def count_tokens(text):
@@ -45,9 +51,21 @@ css = """
   align-content: center;
   padding-top: 12px;
   justify-content: flex-end;
-  margin: 0 10px; /* Adjust the margin as needed */
+  margin: 0 10px;
   text-decoration: none;
-  color: #000; /* Set the desired text color */
+  color: #000;
+}
+.device-badge {
+  display: inline-block;
+  font-size: 0.75em;
+  font-weight: 600;
+  padding: 0.15em 0.6em;
+  border-radius: 0.4rem;
+  background: #1a1a2e;
+  color: #e0e0ff;
+  border: 1px solid #444;
+  margin-left: 0.5em;
+  vertical-align: middle;
 }
 """
 
@@ -55,11 +73,13 @@ css = """
 
 capybara_problem = '''Dr. Capy Cosmos, a capybara unlike any other, astounded the scientific community with his groundbreaking research in astrophysics. With his keen sense of observation and unparalleled ability to interpret cosmic data, he uncovered new insights into the mysteries of black holes and the origins of the universe. As he peered through telescopes with his large, round eyes, fellow researchers often remarked that it seemed as if the stars themselves whispered their secrets directly to him. Dr. Cosmos not only became a beacon of inspiration to aspiring scientists but also proved that intellect and innovation can be found in the most unexpected of creatures.'''
 
-with gr.Blocks(css=css,
-               theme=gr.themes.Default(font=[gr.themes.GoogleFont("Inconsolata"), "Arial", "sans-serif"])) as app:
+THEME = gr.themes.Default(font=[gr.themes.GoogleFont("Inconsolata"), "Arial", "sans-serif"])
+
+with gr.Blocks() as app:
     with gr.Row():
         with gr.Column(scale=3):
-            gr.HTML("<p><h1> binoculars: zero-shot llm-text detector</h1>")
+            gr.HTML(f'<p><h1> binoculars: zero-shot llm-text detector'
+                    f'<span class="device-badge">{_device_emoji} {_device_label}</span></h1>')
         with gr.Column(scale=1):
             gr.HTML("""
             <p>
