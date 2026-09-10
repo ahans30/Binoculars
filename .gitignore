@@ -162,3 +162,10 @@ cython_debug/
 samples/
 
 **.*ipynb
+
+# Local test reports and generated outputs
+artifacts/
+output/
+.DS_Store
+.gradio/
+AyoExperimentInput/
