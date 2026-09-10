@@ -168,3 +168,4 @@ artifacts/
 output/
 .DS_Store
 .gradio/
+AyoExperimentInput/
