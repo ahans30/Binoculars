@@ -36,7 +36,9 @@ jobs:
           cache-dependency-path: requirements-ci.txt
 
       - name: 依存関係を導入
-        run: pip install -r requirements-ci.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
 
       # 検索結果は入れ替わるので、毎回作り直して古い指紋を残さない
       - name: 照合先を取り込む
