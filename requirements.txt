@@ -1,9 +1,15 @@
-sentencepiece
-transformers[torch] @ https://github.com/huggingface/transformers/archive/refs/tags/v4.31.0.zip
-datasets
-numpy
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch
+transformers
+accelerate
 gradio
-gradio_client
-scikit-learn
-seaborn
-pandas
+pymupdf
+python-docx>=1.2
+rapidfuzz
+faiss-cpu
+sentence-transformers
+lxml
+httpx
+pytest
+fonttools
+rapidocr

@@ -1,0 +1,12 @@
+# 照合先の検索式の例です。自分の分野に合わせて書き換えてください。
+# 1行に `pubmed: 検索式` または `pmc: 検索式` を書きます。
+# pubmed の1つの検索式で取得できるのは新しい順に9,999件までです。pmc は上限を超えると出版月で分けて取得します。
+# pmc はCCライセンスの全文だけを取得します（検索式に自動で条件を加えます）。
+
+pubmed: "randomized controlled trial"[Publication Type] AND humans[MeSH Terms]
+pubmed: "cohort studies"[MeSH Terms] AND humans[MeSH Terms]
+pubmed: "systematic review"[Publication Type]
+
+pmc: "randomized controlled trial"[Title/Abstract]
+pmc: "cohort study"[Title/Abstract]
+pmc: "systematic review"[Title/Abstract]

@@ -1,0 +1,10 @@
+# GitHub Actions 用。PyTorch を使う AI スコアと画面、言い換え検索は含まない
+pymupdf
+python-docx>=1.2
+rapidfuzz
+faiss-cpu
+lxml
+httpx
+pytest
+fonttools
+numpy
