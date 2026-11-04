@@ -1,0 +1,86 @@
+{
+ "library": {
+  "documents": 665,
+  "phrases_seen": 3,
+  "documents_by_hits_capped_at_5": {
+   "0": 662,
+   "1": 3
+  },
+  "top": [
+   [
+    "machine interpretation",
+    1
+   ],
+   [
+    "kinematic consistency",
+    1
+   ],
+   [
+    "enormous language models",
+    1
+   ]
+  ]
+ },
+ "pubmed": {
+  "documents": 86443,
+  "phrases_seen": 13,
+  "documents_by_hits_capped_at_5": {
+   "0": 86425,
+   "1": 18
+  },
+  "top": [
+   [
+    "eye ailments",
+    4
+   ],
+   [
+    "feedback processing",
+    3
+   ],
+   [
+    "acknowledgment rate",
+    1
+   ],
+   [
+    "neural organization",
+    1
+   ],
+   [
+    "malignancy chance",
+    1
+   ],
+   [
+    "repetitive organization",
+    1
+   ],
+   [
+    "rigid approaches",
+    1
+   ],
+   [
+    "hefty metals",
+    1
+   ],
+   [
+    "malignant growth",
+    1
+   ],
+   [
+    "administered ai",
+    1
+   ],
+   [
+    "china national knowledge internet cnki",
+    1
+   ],
+   [
+    "abnormality recognition",
+    1
+   ],
+   [
+    "assault model",
+    1
+   ]
+  ]
+ }
+}

@@ -1,81 +1,204 @@
-# <img src="./assets/bino-logo.svg" width=40 style="padding-top: 0px"/>  Binoculars: Zero-Shot Detection of LLM-Generated Text [[paper]](https://arxiv.org/abs/2401.12070)[[demo]](https://huggingface.co/spaces/tomg-group-umd/Binoculars)
+# Binoculars 投稿前チェックツール
 
-<p align="center">
-  <img src="assets/binoculars.jpg" width="300" height="300" alt="ool Binoculars with Falcon on Top">
-</p>
+[Binoculars](https://github.com/ahans30/Binoculars)（Hans et al., ICLR 2024）をもとに、投稿前の原稿を手元で確認するための機能を追加実装したものです。元の開発者による公式版ではありません。
 
-We introduce Binoculars, a state-of-the-art method for detecting AI-generated text. Binoculars is a
-zero-shot and domain-agnostic (requires no training data) method. It is based on a simple idea: most
-decoder-only, causal language models have a huge overlap in pretraining datasets, for e.g. Common Crawl, Pile, etc.
-More details about the method and results can be found in our paper **Spotting LLMs with Binoculars: Zero-Shot
-Detection of Machine-Generated Text**.
+## 元のBinocularsとの違い
+元のBinocularsは、AI生成文を検出するスコアの実装です。このリポジトリでは、そのスコアを実装し直し、類似度の確認などを加えました。
 
-## Getting Started
+| 項目 | 元のBinoculars | このリポジトリ |
+|---|---|---|
+| AI生成文のスコア | Falcon-7Bを既定に、固定の閾値でAI生成か人間作成かを判定 | 同じ計算（log PPL / log Cross-PPL）を `app.py` に実装。モデルを指定でき、長い文書は512トークンごとに分割して全体を評価。**判定は出さない**（[医学論文での評価](#医学論文での性能)の結果による） |
+| 類似度の確認 | なし | 追加（指紋による照合、PDFとHTMLのレポート） |
+| 言い換えの候補 | なし | 追加（文の埋め込みと再評価） |
+| フラッグ | なし | 追加（不自然な語句、撤回論文の引用、文字の加工、表示と抽出の不一致、引用の重なり） |
+| 修正案 | なし | 追加（このPC内のLLMを使用） |
+| 検出率の評価 | 論文を参照 | 追加（`evaluation/` に手順と結果） |
+| 画面 | Gradioのデモ | 3つのタブのWebUI、GitHub Actions 用のワークフロー |
 
-### Installation
+元のコード（`binoculars/`、`datasets/`、`experiments/`、`demo/`、`main.py`、`setup.py`）はそのまま残しています。このツールからは使っておらず、このリポジトリでは動作を確認していません。`app.py` と `requirements.txt` は置き換えたので、元のコードを動かすときは[元のリポジトリ](https://github.com/ahans30/Binoculars)の手順に従ってください。
 
-To run the implementation of Binoculars, you can clone this repository and install the package using pip. This code was
-developed and tested on Python This code was developed and tested with Python 3.9. To install the package, run the
-following commands:
+## このツールの機能
+次の3つのタブがあります。
+
+- **類似度チェック**: PubMed抄録、PMC全文（CCライセンスのみ）、手元のPDFを照合先にして、一致箇所をレポートにします。
+- **修正案**: 一致した文について、対応方法と修正案をこのPC内のLLMで作ります。
+- **Binocularsスコア**: ICLR 2024採択論文 *“Spotting LLMs With Binoculars: Zero-Shot Detection of Machine-Generated Text”* の方法で文章のスコアを計算します。AI利用の有無は判定しません。
+
+GitHub Actions で類似度チェックを動かす場合は [手順書](docs/github-actions.md) を参照してください。**このリポジトリは公開なので、原稿を置かないでください。** Actions を使うときは、別の非公開リポジトリを作ります。
+
+## 起動方法
+1. `start.bat` をダブルクリックします。
+2. 初回は仮想環境（Python 3.14）の構築と、CUDA 12.8 版 PyTorch を含むライブラリのインストールが自動で実行されます。
+3. 完了するとブラウザ（`http://127.0.0.1:7860`）が自動で開きます。
+
+PyTorch は `start.bat` が CUDA 12.8 版の配布元（`--index-url`）から先に入れます。`requirements.txt` には PyTorch の配布元を書いていません（`--extra-index-url` にすると、同じ名前の PyPI のパッケージと比べて版の高い方が入るため）。
+
+既知の未修正の脆弱性: gradio（最新の 6.31.0 も）が `pillow<13.0` を要求するため、Pillow は修正版の 13.0.0 に上げられず 12.x が入ります（同梱の libopenjp2 のヒープオーバーフローなど）。gradio が Pillow 13 に対応するまで、信頼できない画像・PDF は読み込ませないでください。
+
+## 類似度チェック
+
+### 照合先の登録
+コマンドは仮想環境の Python で実行します（`venv\Scripts\python.exe -m simcheck ...`）。
+
+| コマンド | 内容 |
+|---|---|
+| `add-library "フォルダ"` | フォルダ内のPDFを登録します。元のファイルには書き込みません。`--rebuild` で登録し直します |
+| `index-semantic` | 手元のPDFの言い換え検索用索引を作ります。PDFを登録し直したら再実行してください |
+| `index-semantic --pubmed` | PubMed抄録の言い換え検索用索引を作ります。件数は `--max-docs` で指定します（既定は10万件で、先に登録した文献から選びます） |
+| `index-semantic --add-matching "正規表現"` | 題名か雑誌名が合うPubMed抄録を言い換え検索用索引に加えます。先に `--pubmed` で索引を作ってください |
+| `index-semantic --add-pmc` | 登録済みのPMC全文を言い換え検索用索引に加えます |
+| `index-citations` | 引用の重なりの確認に使う一覧を作ります。文献を増やしたら再実行してください |
+| `add-pubmed-query "検索式"` | 検索式に合うPubMed抄録を登録します（1万件まで） |
+| `add-pmc-query "検索式"` | 検索式に合うCCライセンスのPMC全文を登録します。1万件を超える検索は出版月で分けて取得します |
+| `build-corpus ファイル` | 検索式を並べたファイル（`corpus/` を参照）から、まとめて登録します |
+| `add-pubmed` | PubMedベースラインを登録します。`--first` と `--last` でファイル番号を指定でき、中断しても続きから再開します。空き容量が40GBを下回ると中断します |
+| `update-integrity` | 不自然な語句のリストと撤回データを取得します。撤回データは平日に毎日更新されるので、確認の前に実行してください |
+| `compact` | 指紋の索引を1つに統合します。ベースラインを大量に登録した後に実行してください |
+| `stats` | 索引の状態を表示します |
+| `check "文書"` | 文書を確認してPDFとHTMLのレポートを作ります |
+
+索引とレポートは `data/simcheck/` に保存します。索引には購読誌PDFの本文も含まれるので、共有しないでください。
+
+ベースライン全件のダウンロードは約52GBです。実際の取り込みでは、PubMed抄録約2,100万件とPMC全文約14万件の時点で、文献本体が約31GB、指紋が約16GB（統合前）で、6接続で7時間を超えました（接続障害のやり直しを含む）。全件での検索速度は未確認です。
+
+### 検出の仕組み
+1. PDF、DOCX、TXTから本文を取り出し、参考文献や引用などの除外範囲を決めます。
+2. 文字の正規化（全角半角、合字、行末ハイフン、不可視文字、ラテン文字と同形のキリル文字とアルメニア文字、ラテン文字の単語に混ざったギリシャ文字など）をしてから、英語は単語、日本語は文字単位に分けます。
+3. 指紋（winnowing）で候補文書を探し、トークン単位で位置を合わせて一致箇所を決めます。候補は全体の上位に加え、原稿の100語ごとの上位からも選びます。10語以上の連続した一致には必ず共通の指紋が残ります。8〜9語の一致は検出できないことがあります。
+4. 複数の出典に一致する箇所は二重に数えません。定型表現の除外を選ぶと、多くの文献に共通する表現を一致からも分母からも除きます（既定では除外しません）。
+5. 言い換えは BAAI/bge-m3 の埋め込みで探し、英語の文は、出典を読ませると文の予測がどれだけ楽になるか（SCDG、Qwen2.5-1.5B）で絞ります。対象は手元のPDFと、索引を作ったPubMed抄録です。PubMed全件は索引の容量の都合で対象にできません。英語の文からは日本語のPDFも探します。類似度の値には含めません。
+
+### フラッグ
+どれも類似度の値には含めません。
+
+- **不自然な語句**: 言い換えツールの痕跡として知られる語句を、[Problematic Paper Screener](https://dbrech.irit.fr/pls/apex/f?p=9999:5) のリストと照合します。参考文献は対象外です。2種類以上の一致でフラッグにし、1種類は注記に留めます。
+- **撤回論文の引用**: 参考文献を [Retraction Watch](https://gitlab.com/crossref/retraction-watch-data) のデータとDOI、PMID、題名で照合します。撤回と懸念表明を分けて示し、訂正だけの論文と撤回が取り消された論文は示しません。題名だけの一致は別の項目にします。
+
+- **文字の加工**: 不可視文字、多数のソフトハイフン、ラテン文字の単語に混ざった形の似た文字、透明文字などを示します。
+- **表示と抽出の不一致**: PDFの見た目と抽出した文字列が大きく違うページを示します。最大4ページを描画して、このPC内のOCR（RapidOCR）で読み取って比べます。
+- **引用の重なり**: 同じ文献と参考文献が大きく重なるときに示します。`index-citations` を実行した文献が対象です。
+
+不自然な語句、表示と抽出の不一致、引用の重なりの検出率は確認していません。一致しなくても問題がないことの証明にはなりません。不自然な語句と撤回論文の誤検出の確認結果は [評価結果](evaluation/integrity/results.md) を参照してください。
+
+### 検出率の評価
+転用を埋め込んだ合成原稿で、加工の種類ごとに測りました。そのままの転用は10語以上でほぼ検出できますが、5語ごとに語を編集すると指紋が残らず、ほとんど検出できません。強い言い換えは言い換え検索で89〜98%を候補に挙げられますが、転用のない文章でも1,000語あたり1〜2件の候補が出ます。合成原稿での値で、実際の原稿での検出率ではありません。詳細は [評価結果](evaluation/detection/results.md) を参照してください。
+
+### レポート
+- **PDF**: 表紙、概要、出典一覧、原稿の各ページ、言い換えの候補の順にまとめます。原稿ページでは一致を赤、除外範囲を灰色、言い換えの候補を点線の下線で示し、左余白に出典番号を出します。出典の本文は載せません。
+- **HTML**: 原稿と出典の本文を並べて比較できます。購読誌PDFの本文を含むので、共有しないでください。
+- DOCXはWordでPDFに変換して原稿ページを作ります。作業用のコピーを使うので、元のファイルは変更しません。Wordを使えない場合は本文だけを組み直すので、ページと行は原稿と一致しません。
+
+### 結果の読み方
+- 類似度は、確認対象の語数に対する一致語数の割合です。語数は日本語2.5文字を1語として換算します。
+- **照合先にない文献（購読誌の本文、Webページなど）との一致は検出できません。** 低い値でも盗用がないことの証明にはなりません。
+- 商用サービスとはデータベースも計算方法も異なるので、値は比較できません。投稿先での確認結果とは異なる場合があります。
+- 転用がなくても定型句だけで値が出ます。AIの新規作成文を対照にすると、長文（平均844語）で平均1.3%、最大3.5%、抄録の長さでは平均5.0%、最大32.7%でした。短い文章では1文の一致で値が大きく動くので、値だけで判断せず一致箇所を確認してください。
+- 一致とみなす最小語数の既定は8語です。7語以下にすると定型句の一致が急に増えます。
+- 言い換えとフラッグは確認のための候補で、不正の証拠ではありません。
+  - 言い換えの既定の閾値は `0.85` です。再評価を使うときは類似度0.82以上の候補を利得で絞ります。再評価のモデルを読み込めないときは類似度0.85のみで判定し、その旨をレポートに書きます。
+  - 閾値を下げると検出は増えますが、実際の論文では同じ分野の無関係な文も多く挙がります。
+
+### データの扱い
+- 確認処理はこのPC内で完結し、原稿の内容を外部に送りません。外部に通信するのは、PubMedとPMCのデータ、語句リスト、撤回データの取得時だけです。どれも原稿の内容は含みません。
+- 語句リストにはライセンスの記載がありません。`data/integrity/` のデータを他の人に配布する場合は、先に提供元に確認してください。
+- 画面からアップロードした文書は、Gradio がPC内の一時フォルダにコピーします。
+- スキャンPDFは照合先に登録できません（OCRは表示と抽出の不一致の確認にだけ使います）。
+
+### テスト
+```bash
+venv/Scripts/python.exe -m pytest tests
+```
+
+## 照合先の作り方
+照合先のデータは配布していません（[含めていないデータ](#含めていないデータ)を参照）。次の手順で各自のPCに作ります。
 
 ```bash
-$ git clone https://github.com/ahans30/Binoculars.git
-$ cd Binoculars
-$ pip install -e .
+venv\Scripts\python.exe -m simcheck add-pubmed
+venv\Scripts\python.exe -m simcheck build-corpus corpus/queries.txt
+venv\Scripts\python.exe -m simcheck add-library "PDFのフォルダ"
+venv\Scripts\python.exe -m simcheck update-integrity
+venv\Scripts\python.exe -m simcheck compact
+venv\Scripts\python.exe -m simcheck index-citations
+venv\Scripts\python.exe -m simcheck index-semantic
+venv\Scripts\python.exe -m simcheck index-semantic --pubmed
 ```
 
-### Usage
+全件が不要なら、`add-pubmed` の代わりに `add-pubmed --first 番号 --last 番号` か `build-corpus` で範囲を絞れます。`corpus/queries.txt` の検索式は例なので、自分の分野に書き換えてください。`evaluation/` の結果の数値は、測定時の照合先での値です。
 
-Please note, this implementation comes with a fixed global threshold that is used to classify the input as AI-generated
-or not. This threshold is selected using _Falcon-7B_ and _Falcon-7B-Instruct_ models for scoring. If you want to
-use different scoring models, you can pass it as an argument to the `Binoculars` class. Please read the paper for more
-details about the Binoculars work.
+## 含めていないデータ
+`data/` はリポジトリに含めません。
 
-To detect AI-generated text, please use the following code snippet:
+| データ | 含めない理由 |
+|---|---|
+| 手元のPDFの本文（`data/simcheck/docs.sqlite` の一部） | 購読誌の本文です。文字列として取り出しても著作権はなくなりません |
+| PubMed抄録 | 配布には [NLMの条件](https://www.nlm.nih.gov/databases/download/terms_and_conditions.html)（出典の表示、最新版の維持またはその旨の明記）があり、抄録自体の著作権は出版社や著者にある場合があります。各自で取得できます |
+| PMC全文 | 論文ごとにCCライセンスの条件が異なります。各自で取得できます |
+| 評価用のデータ（`data/detection_eval/`、`data/ai_threshold/`） | 購読誌PDFの抜粋を含みます |
+| 不自然な語句のリスト（`data/integrity/`） | ライセンスの記載がありません |
+| 指紋と埋め込みの索引 | 本文がないと一致箇所を示せません。数十GBあり、GitHubのファイルサイズの上限も超えます |
 
-```python
-from binoculars import Binoculars
+PubMedのデータの提供元は U.S. National Library of Medicine です。このリポジトリはNLMの承認を受けたものではありません。
 
-bino = Binoculars()
+## 修正案
+一致した文ごとに、対応方法（引用を追加、引用符と引用、書き直し）の提案と修正案を作ります。文に数値がなく、同じ表現が照合先の多くの文献に現れる場合だけ、定型句の可能性を示します。この判定はLLMに任せません。LLMに任せると、結果の数値を含む文にも「引用不要」と答えることがあったためです。本文は自動で変更せず、著者が選んだ対応をコメントとして付けたWordのコピーを `data/simcheck/revisions/` に保存します。
 
-# ChatGPT (GPT-4) output when prompted with “Can you write a few sentences about a capybara that is an astrophysicist?"
-sample_string = '''Dr. Capy Cosmos, a capybara unlike any other, astounded the scientific community with his 
-groundbreaking research in astrophysics. With his keen sense of observation and unparalleled ability to interpret 
-cosmic data, he uncovered new insights into the mysteries of black holes and the origins of the universe. As he 
-peered through telescopes with his large, round eyes, fellow researchers often remarked that it seemed as if the 
-stars themselves whispered their secrets directly to him. Dr. Cosmos not only became a beacon of inspiration to 
-aspiring scientists but also proved that intellect and innovation can be found in the most unexpected of creatures.'''
+**書き直しても、出典の内容を使っている場合は引用が必要です。** 類似度を下げることを目的にせず、1件ずつ内容を確認してください。採用した文はAIによる編集にあたるので、投稿先の規定に沿って申告してください。
 
-print(bino.compute_score(sample_string))  # 0.75661373
-print(bino.predict(sample_string))  # 'Most likely AI-Generated'
-```
+### 使い方
+1. LM Studio でモデルを読み込み、サーバーを起動します。原稿と出典の本文をこのモデルに渡すので、外部のAPIには接続しないでください。
+2. 「修正案」タブでDOCXを指定して作成します。
+3. 1文ずつ案を確認し、必要なら編集して対応を選びます。
+4. 「Wordに書き出す」でコメント付きのコピーを作ります。元のファイルは変更しません。
 
-In the above code, user can also pass a `list` of `str` to `compute_score` and `predict` methods to get results for
-the entire batch of samples.
+### 案の検査
+LLMの自己申告には頼らず、各案を次の項目で検査します。検査に通らなかった案も表示しますが、問題点を明記して後ろに並べます。
 
-### Demo
+- 数値と文献番号が元の文と同じか
+- 略語や用語が消えていないか
+- 否定の表現の数が変わっていないか
+- 元の文にない増減や比較の方向を表す語がないか
+- 統計的有意性の表現が変わっていないか
+- 元の文と同じ言語か（変わった案は表示しません）
+- 元の文とまったく別の文になっていないか（bge-m3 の類似度、閾値 0.75）
 
-We have also made a demo available to predict AI-generated text interactively with a simple UI
-using [gradio](https://github.com/gradio-app/gradio). You can run the demo using the following command:
+照合先と一致が残る語数も参考として表示しますが、案の並び順には使いません。
 
-```bash
-$ python app.py
-```
+**検査に通った案も、そのまま採用できません。** 公開抄録の文での確認では、検査に通った案45件のうち4件で意味がはっきり変わっていました（`One group` を `experimental group` にするなど）。事実の追加や、方法や対象の置き換えは検査では検出できないので、採用する前に必ず著者が内容を確認してください。詳細は [評価結果](evaluation/revise/results.md) を参照してください。 対象は完全一致の文だけで、言い換えの候補は含みません。
 
-## Limitations
+## Binocularsスコア
 
-All AI-generated text detectors aim for accuracy, but none are perfect and can have multiple failure modes (e.g.,
-Binoculars is more proficient in detecting English language text compared to other languages). This implementation is
-for academic purposes only and should not be considered as a consumer product. We also strongly caution against using
-Binoculars (or any detector) without human supervision.
+### モデルの指定ルール
+- **必須条件**: Observer（Base）と Performer（Instruct）は**同一ファミリー・同一語彙（トークナイザー）**である必要があります（例: `Qwen/Qwen2.5-1.5B` と `Qwen/Qwen2.5-1.5B-Instruct`）。語彙が異なる場合はロード時にエラーになります。
+- ローカルパスまたは Hugging Face モデルIDを指定してロードしてください。
+- ローカルパスは Hugging Face 形式（`config.json` と `*.safetensors` を含むフォルダ）である必要があります。LM Studio の GGUF ファイルは読み込めません。
 
-## Cite our work
+### スコアの読み方
+- スコアは log PPL を log Cross-PPL で割った値で、低いほどAI生成文に近い傾向があります。
+- 「AI生成」や「人間作成」の判定と閾値は表示しません。評価の結果、どの閾値でも実用になる判定ができなかったためです。
+- 長い文書は512トークンごとに分割して全体を評価し、区間別のスコアも表示します。
 
-If you find this work useful, please cite our paper:
+### 医学論文での性能
+**このスコアを、AI利用の有無の根拠にしないでください。** Qwen2.5-1.5B の組み合わせを英語の医学論文の文章で評価したところ、事前に定めた基準を満たさず、閾値の調整では解決できませんでした。
+
+| 項目 | 結果 |
+|---|---|
+| AUC（AIの新規作成文、抄録の長さ） | 0.729（95%信頼区間 0.683〜0.774） |
+| 論文の閾値0.9015（Falcon向け）で判定した場合 | 人間の抄録の5.0%をAIと誤判定し、AI文の22.6%を検出 |
+| 閾値0.916（校正用の偽陽性率5%）での日本の所属の誤判定 | 10.0%（日本以外は3.3〜5.0%、件数が少なく差は確定できない） |
+| AIが推敲した文章のAUC | 0.541（ほぼ判別できない） |
+| 長文のAUC | 0.497（判別できない） |
+
+スコアが高くてもAIを使っていないことの根拠にはならず、低くてもAIを使ったことの根拠にはなりません。日本語の文章は評価していません。詳細は [評価結果](evaluation/ai_threshold/results.md) を参照してください。
+
+### 画面の表示
+- 画面右側で、各トークンがモデルの予測にどれだけ沿っていたかを色で表示します。緑は予測通り、赤は予想外の語です。AIか人間かを示すものではありません。
+
+## 引用
+Binocularsスコアの方法を使う場合は、元の論文を引用してください。
 
 ```bibtex
 @misc{hans2024spotting,
-      title={Spotting LLMs With Binoculars: Zero-Shot Detection of Machine-Generated Text}, 
+      title={Spotting LLMs With Binoculars: Zero-Shot Detection of Machine-Generated Text},
       author={Abhimanyu Hans and Avi Schwarzschild and Valeriia Cherepanova and Hamid Kazemi and Aniruddha Saha and Micah Goldblum and Jonas Geiping and Tom Goldstein},
       year={2024},
       eprint={2401.12070},
@@ -83,3 +206,6 @@ If you find this work useful, please cite our paper:
       primaryClass={cs.CL}
 }
 ```
+
+## ライセンス
+コードは、元のBinocularsも追加した部分も BSD 3-Clause ライセンスです（[LICENSE.md](LICENSE.md)）。照合先のデータには、それぞれの提供元の条件が適用されます。

@@ -1,0 +1,61 @@
+name: 照合先の更新
+
+on:
+  schedule:
+    - cron: "0 18 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-index
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    env:
+      SIMCHECK_DATA_DIR: ${{ github.workspace }}/data/simcheck
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      # 取り込んだ論文を Release で再配布することになるので、公開リポジトリでは実行しない
+      - name: 非公開リポジトリか確認
+        if: ${{ !github.event.repository.private }}
+        run: |
+          echo "::error::公開リポジトリでは実行しません。リポジトリを非公開にしてください。"
+          exit 1
+
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: requirements-ci.txt
+
+      - name: 依存関係を導入
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
+      # 検索結果は入れ替わるので、毎回作り直して古い指紋を残さない
+      - name: 照合先を取り込む
+        run: |
+          python -m simcheck build-corpus corpus/queries.txt
+          python -m simcheck compact
+          python -m simcheck stats
+
+      - name: 索引を分割して保存
+        run: |
+          mkdir -p "$RUNNER_TEMP/index"
+          tar -czf - -C "$SIMCHECK_DATA_DIR" docs.sqlite segments | split -b 1900M - "$RUNNER_TEMP/index/index.tar.gz.part"
+          ls -la "$RUNNER_TEMP/index"
+          if ! gh release view corpus-index >/dev/null 2>&1; then
+            gh release create corpus-index --title "照合先の索引" --notes "自動生成。再配布しないでください。" --latest=false
+          fi
+          gh release view corpus-index --json assets --jq '.assets[].name' | while IFS= read -r asset; do
+            gh release delete-asset corpus-index "$asset" --yes
+          done
+          gh release upload corpus-index "$RUNNER_TEMP"/index/index.tar.gz.part*

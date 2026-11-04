@@ -1,0 +1,38 @@
+{
+  "model": "qwen3.8-27b-heretic-abliterated-uncensored",
+  "n_sentences": 60,
+  "n_errors": 0,
+  "actions": {
+    "keep": 4,
+    "cite": 3,
+    "quote": 1,
+    "rewrite": 52
+  },
+  "n_candidates": 163,
+  "sentences_with_candidates": 55,
+  "sentences_with_passing_candidate": 45,
+  "numbers_ok": 140,
+  "terms_ok": 149,
+  "negation_ok": 155,
+  "direction_ok": 158,
+  "significance_ok": 157,
+  "language_ok": 148,
+  "seed": 20261104,
+  "passed": 115,
+  "similarity_percentiles": {
+    "1": 0.7633865666389466,
+    "5": 0.8185438275337219,
+    "25": 0.9061153531074524,
+    "50": 0.9383713006973267,
+    "75": 0.9649433195590973,
+    "95": 0.9791305661201477
+  },
+  "unrelated_percentiles": {
+    "50": 0.44787144660949707,
+    "95": 0.5584532618522644,
+    "99": 0.6047492027282715,
+    "100": 0.6557257771492004
+  },
+  "longest_source_run_median": 5.0,
+  "seconds_median": 9.150784254074097
+}

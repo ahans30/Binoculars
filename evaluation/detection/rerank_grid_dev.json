@@ -1,0 +1,406 @@
+{
+ "pairs": 3491,
+ "seconds": 823.4933176040649,
+ "grid": [
+  {
+   "cosine": 0.75,
+   "gain": null,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.93,
+   "filler_per_1000": 16.614279299506062,
+   "human_per_1000": 17.14687987127269
+  },
+  {
+   "cosine": 0.75,
+   "gain": 0.2,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.93,
+   "filler_per_1000": 11.874469889737066,
+   "human_per_1000": 13.702418665459849
+  },
+  {
+   "cosine": 0.75,
+   "gain": 0.4,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.92,
+   "filler_per_1000": 7.184553210597216,
+   "human_per_1000": 9.428269723940263
+  },
+  {
+   "cosine": 0.75,
+   "gain": 0.5,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.92,
+   "filler_per_1000": 4.689916679139849,
+   "human_per_1000": 7.190627042791774
+  },
+  {
+   "cosine": 0.75,
+   "gain": 0.6,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.92,
+   "filler_per_1000": 3.0933492990071345,
+   "human_per_1000": 5.606677729169809
+  },
+  {
+   "cosine": 0.75,
+   "gain": 0.7,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.9,
+   "filler_per_1000": 2.394851070199072,
+   "human_per_1000": 4.324433046713934
+  },
+  {
+   "cosine": 0.75,
+   "gain": 0.8,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.88,
+   "filler_per_1000": 1.6963528413910094,
+   "human_per_1000": 3.293608890229798
+  },
+  {
+   "cosine": 0.75,
+   "gain": 1.0,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.83,
+   "filler_per_1000": 0.898069151324652,
+   "human_per_1000": 1.9862221551767487
+  },
+  {
+   "cosine": 0.78,
+   "gain": null,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.92,
+   "filler_per_1000": 9.853814299256598,
+   "human_per_1000": 10.23281540704983
+  },
+  {
+   "cosine": 0.78,
+   "gain": 0.2,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.92,
+   "filler_per_1000": 7.833158708776131,
+   "human_per_1000": 8.573439935636346
+  },
+  {
+   "cosine": 0.78,
+   "gain": 0.4,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.91,
+   "filler_per_1000": 4.889487601656438,
+   "human_per_1000": 6.23522904409916
+  },
+  {
+   "cosine": 0.78,
+   "gain": 0.5,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.91,
+   "filler_per_1000": 3.218081125580003,
+   "human_per_1000": 5.003268466837633
+  },
+  {
+   "cosine": 0.78,
+   "gain": 0.6,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.91,
+   "filler_per_1000": 2.2950656089407775,
+   "human_per_1000": 3.9724443103534974
+  },
+  {
+   "cosine": 0.78,
+   "gain": 0.7,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.89,
+   "filler_per_1000": 1.8460310332784513,
+   "human_per_1000": 3.1930406798411024
+  },
+  {
+   "cosine": 0.78,
+   "gain": 0.8,
+   "light/pubmed": 1.0,
+   "light/library": 0.94,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.87,
+   "filler_per_1000": 1.3720500923015517,
+   "human_per_1000": 2.4136370493287074
+  },
+  {
+   "cosine": 0.78,
+   "gain": 1.0,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 1.0,
+   "heavy/library": 0.83,
+   "filler_per_1000": 0.8481764206955047,
+   "human_per_1000": 1.55880726102479
+  },
+  {
+   "cosine": 0.8,
+   "gain": null,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.92,
+   "filler_per_1000": 6.835304096193185,
+   "human_per_1000": 7.215769095388947
+  },
+  {
+   "cosine": 0.8,
+   "gain": 0.2,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.92,
+   "filler_per_1000": 5.612932195779075,
+   "human_per_1000": 6.184944938904812
+  },
+  {
+   "cosine": 0.8,
+   "gain": 0.4,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.91,
+   "filler_per_1000": 3.5423838746694605,
+   "human_per_1000": 4.626137677880022
+  },
+  {
+   "cosine": 0.8,
+   "gain": 0.5,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.91,
+   "filler_per_1000": 2.5195828967719405,
+   "human_per_1000": 3.871876099964801
+  },
+  {
+   "cosine": 0.8,
+   "gain": 0.6,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.91,
+   "filler_per_1000": 1.8460310332784513,
+   "human_per_1000": 3.092472469452406
+  },
+  {
+   "cosine": 0.8,
+   "gain": 0.7,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.88,
+   "filler_per_1000": 1.571621014818141,
+   "human_per_1000": 2.5644893649117515
+  },
+  {
+   "cosine": 0.8,
+   "gain": 0.8,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.86,
+   "filler_per_1000": 1.1724791697849624,
+   "human_per_1000": 2.0113642077739224
+  },
+  {
+   "cosine": 0.8,
+   "gain": 1.0,
+   "light/pubmed": 1.0,
+   "light/library": 0.92,
+   "heavy/pubmed": 0.9894736842105263,
+   "heavy/library": 0.81,
+   "filler_per_1000": 0.7733373247517836,
+   "human_per_1000": 1.3325287876502239
+  },
+  {
+   "cosine": 0.82,
+   "gain": null,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.92,
+   "filler_per_1000": 4.889487601656438,
+   "human_per_1000": 5.053552572031981
+  },
+  {
+   "cosine": 0.82,
+   "gain": 0.2,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.92,
+   "filler_per_1000": 4.066257546275508,
+   "human_per_1000": 4.5507115200885
+  },
+  {
+   "cosine": 0.82,
+   "gain": 0.4,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.91,
+   "filler_per_1000": 2.694207453973956,
+   "human_per_1000": 3.645597626590235
+  },
+  {
+   "cosine": 0.82,
+   "gain": 0.5,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.91,
+   "filler_per_1000": 1.9707628598513196,
+   "human_per_1000": 3.2433247850354503
+  },
+  {
+   "cosine": 0.82,
+   "gain": 0.6,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.9,
+   "filler_per_1000": 1.421942822930699,
+   "human_per_1000": 2.6147734701060994
+  },
+  {
+   "cosine": 0.82,
+   "gain": 0.7,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.86,
+   "filler_per_1000": 1.2223719004141096,
+   "human_per_1000": 2.187358575954141
+  },
+  {
+   "cosine": 0.82,
+   "gain": 0.8,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.82,
+   "filler_per_1000": 0.898069151324652,
+   "human_per_1000": 1.7096595766078342
+  },
+  {
+   "cosine": 0.82,
+   "gain": 1.0,
+   "light/pubmed": 1.0,
+   "light/library": 0.92,
+   "heavy/pubmed": 0.9789473684210527,
+   "heavy/library": 0.78,
+   "filler_per_1000": 0.6486054981789153,
+   "human_per_1000": 1.1313923668728314
+  },
+  {
+   "cosine": 0.85,
+   "gain": null,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9263157894736842,
+   "heavy/library": 0.89,
+   "filler_per_1000": 2.544529262086514,
+   "human_per_1000": 2.815909890883492
+  },
+  {
+   "cosine": 0.85,
+   "gain": 0.2,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9263157894736842,
+   "heavy/library": 0.88,
+   "filler_per_1000": 2.1952801476824826,
+   "human_per_1000": 2.6147734701060994
+  },
+  {
+   "cosine": 0.85,
+   "gain": 0.4,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9263157894736842,
+   "heavy/library": 0.87,
+   "filler_per_1000": 1.5217282841889936,
+   "human_per_1000": 2.162216523356967
+  },
+  {
+   "cosine": 0.85,
+   "gain": 0.5,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9263157894736842,
+   "heavy/library": 0.86,
+   "filler_per_1000": 1.122586439155815,
+   "human_per_1000": 2.0113642077739224
+  },
+  {
+   "cosine": 0.85,
+   "gain": 0.6,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9263157894736842,
+   "heavy/library": 0.85,
+   "filler_per_1000": 0.823230055380931,
+   "human_per_1000": 1.6845175240106602
+  },
+  {
+   "cosine": 0.85,
+   "gain": 0.7,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9263157894736842,
+   "heavy/library": 0.82,
+   "filler_per_1000": 0.673551863493489,
+   "human_per_1000": 1.483381103233268
+  },
+  {
+   "cosine": 0.85,
+   "gain": 0.8,
+   "light/pubmed": 1.0,
+   "light/library": 0.93,
+   "heavy/pubmed": 0.9263157894736842,
+   "heavy/library": 0.78,
+   "filler_per_1000": 0.598712767549768,
+   "human_per_1000": 1.1816764720671795
+  },
+  {
+   "cosine": 0.85,
+   "gain": 1.0,
+   "light/pubmed": 1.0,
+   "light/library": 0.92,
+   "heavy/pubmed": 0.9052631578947369,
+   "heavy/library": 0.7,
+   "filler_per_1000": 0.42408821034775235,
+   "human_per_1000": 0.754261577915221
+  }
+ ]
+}
